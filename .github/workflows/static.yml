@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚽ CRAFTER CROMOS - La Tienda Más Épica ⚽</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a3e 50%, #2d1b69 100%);
+            color: white;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* Partículas animadas */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: linear-gradient(45deg, #00ff88, #00ccff);
+            border-radius: 50%;
+            animation: float 6s infinite linear;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+        }
+
+        /* Header épico */
+        .header {
+            text-align: center;
+            padding: 2rem;
+            position: relative;
+            z-index: 10;
+            background: rgba(0,0,0,0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .logo {
+            font-size: 3.5rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, #00ff88, #00ccff, #ff6b6b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 30px rgba(0,255,136,0.5);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { filter: drop-shadow(0 0 20px #00ff88); }
+            to { filter: drop-shadow(0 0 40px #00ccff); }
+        }
+
+        .subtitle {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            color: #00ccff;
+        }
+
+        /* Navegación */
+        .nav {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            padding: 12px 25px;
+            background: linear-gradient(45deg, #ff6b6b, #ff8e53);
+            border: none;
+            border-radius: 25px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(255,107,107,0.3);
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(255,107,107,0.5);
+        }
+
+        .nav-btn.active {
+            background: linear-gradient(45deg, #00ff88, #00ccff);
+            box-shadow: 0 5px 15px rgba(0,255,136,0.3);
+        }
+
+        /* Carrito */
+        .cart-info {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.8);
+            padding: 15px;
+            border-radius: 10px;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            border: 2px solid #00ff88;
+        }
+
+        .cart-count {
+            background: #ff6b6b;
+            color: white;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        /* Contenedor principal */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        .section {
+            display: none;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Grid de cromos */
+        .cromos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .cromo-card {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 2px solid rgba(0,255,136,0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cromo-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(0,255,136,0.1), transparent);
+            transform: rotate(-45deg);
+            transition: all 0.6s ease;
+            opacity: 0;
+        }
+
+        .cromo-card:hover::before {
+            animation: shine 0.6s ease-in-out;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(-45deg); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translateX(100%) translateY(100%) rotate(-45deg); opacity: 0; }
+        }
+
+        .cromo-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0,255,136,0.3);
+            border-color: #00ff88;
+        }
+
+        .cromo-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 15px;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .cromo-card:hover .cromo-img {
+            transform: scale(1.05);
+        }
+
+        .cromo-name {
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: #00ff88;
+        }
+
+        .cromo-team {
+            color: #00ccff;
+            margin-bottom: 0.5rem;
+        }
+
+        .cromo-price {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #ff6b6b;
+            margin: 1rem 0;
+        }
+
+        .cromo-rarity {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .rarity-comun { background: linear-gradient(45deg, #666, #999); }
+        .rarity-raro { background: linear-gradient(45deg, #4ecdc4, #44a08d); }
+        .rarity-epico { background: linear-gradient(45deg, #667eea, #764ba2); }
+        .rarity-legendario { background: linear-gradient(45deg, #f093fb, #f5576c); }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 5px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #00ff88, #00ccff);
+            color: white;
+            box-shadow: 0 5px 15px rgba(0,255,136,0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,255,136,0.4);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(45deg, #ff6b6b, #ff8e53);
+            color: white;
+            box-shadow: 0 5px 15px rgba(255,107,107,0.3);
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255,107,107,0.4);
+        }
+
+        /* Carrito expandido */
+        .cart-panel {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 400px;
+            height: 100vh;
+            background: rgba(0,0,0,0.95);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            transition: right 0.3s ease;
+            overflow-y: auto;
+            border-left: 2px solid #00ff88;
+        }
+
+        .cart-panel.open {
+            right: 0;
+        }
+
+        .cart-header {
+            padding: 20px;
+            border-bottom: 1px solid rgba(0,255,136,0.3);
+            display: flex;
+            justify-content: between;
+            align-items: center;
+        }
+
+        .cart-item {
+            padding: 15px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cart-total {
+            padding: 20px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #00ff88;
+            text-align: center;
+            border-top: 2px solid #00ff88;
+        }
+
+        .contact-section {
+            background: rgba(0,0,0,0.3);
+            padding: 2rem;
+            border-radius: 20px;
+            margin: 2rem 0;
+            text-align: center;
+        }
+
+        .whatsapp-btn {
+            background: linear-gradient(45deg, #25d366, #128c7e);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .whatsapp-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(37,211,102,0.4);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .logo { font-size: 2.5rem; }
+            .nav { gap: 1rem; }
+            .cart-panel { width: 100%; right: -100%; }
+            .cromos-grid { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; }
+            .container { padding: 1rem; }
+        }
+
+        /* Efectos especiales */
+        .explosion {
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        .explosion-particle {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: #00ff88;
+            border-radius: 50%;
+            animation: explode 0.6s ease-out forwards;
+        }
+
+        @keyframes explode {
+            to {
+                transform: translate(var(--dx), var(--dy)) scale(0);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Partículas de fondo -->
+    <div class="particles" id="particles"></div>
+
+    <!-- Información del carrito -->
+    <div class="cart-info">
+        🛒 Carrito: <span class="cart-count" id="cartCount">0</span>
+        <button class="btn btn-primary" onclick="toggleCart()" style="margin-left: 10px; padding: 5px 15px;">Ver</button>
+    </div>
+
+    <!-- Panel del carrito -->
+    <div class="cart-panel" id="cartPanel">
+        <div class="cart-header">
+            <h3>🛒 Tu Carrito</h3>
+            <button class="btn btn-secondary" onclick="toggleCart()" style="padding: 5px 15px;">✕</button>
+        </div>
+        <div id="cartItems"></div>
+        <div class="cart-total">
+            Total: $<span id="cartTotal">0</span>
+        </div>
+        <div style="padding: 20px;">
+            <a href="#" class="whatsapp-btn" id="whatsappBtn">📱 Pedir por WhatsApp</a>
+            <button class="btn btn-secondary" onclick="clearCart()" style="width: 100%; margin-top: 10px;">🗑️ Vaciar Carrito</button>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <div class="header">
+        <h1 class="logo">⚽ CRAFTER CROMOS ⚽</h1>
+        <p class="subtitle">🔥 La tienda de cromos más LEGENDARIA del mundo 🔥</p>
+        
+        <!-- Navegación -->
+        <div class="nav">
+            <button class="nav-btn active" onclick="showSection('cromos')">🃏 Cromos</button>
+            <button class="nav-btn" onclick="showSection('ofertas')">🔥 Ofertas</button>
+            <button class="nav-btn" onclick="showSection('contacto')">📞 Contacto</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Sección Cromos -->
+        <div id="cromos" class="section active">
+            <h2 style="text-align: center; margin-bottom: 2rem; color: #00ff88; font-size: 2rem;">
+                ⚽ COLECCIÓN ÉPICA 2025 ⚽
+            </h2>
+            
+            <div class="cromos-grid">
+                <!-- Cromo 1 - Messi -->
+                <div class="cromo-card">
+                    <img src="https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=300&h=200&fit=crop" alt="Messi" class="cromo-img">
+                    <div class="cromo-name">Lionel Messi</div>
+                    <div class="cromo-team">🇦🇷 Inter Miami</div>
+                    <div class="cromo-rarity rarity-legendario">⭐ LEGENDARIO</div>
+                    <div class="cromo-price">$25.000</div>
+                    <button class="btn btn-primary" onclick="addToCart('Messi', 25000)">🛒 Agregar</button>
+                    <button class="btn btn-secondary" onclick="showDetails('messi')">👁️ Ver</button>
+                </div>
+
+                <!-- Cromo 2 - Cristiano -->
+                <div class="cromo-card">
+                    <img src="https://images.unsplash.com/photo-1553778263-73a83bab9b0c?w=300&h=200&fit=crop" alt="Cristiano" class="cromo-img">
+                    <div class="cromo-name">Cristiano Ronaldo</div>
+                    <div class="cromo-team">🇵🇹 Al-Nassr</div>
+                    <div class="cromo-rarity rarity-legendario">⭐ LEGENDARIO</div>
+                    <div class="cromo-price">$23.000</div>
+                    <button class="btn btn-primary" onclick="addToCart('Cristiano', 23000)">🛒 Agregar</button>
+                    <button class="btn btn-secondary" onclick="showDetails('cristiano')">👁️ Ver</button>
+                </div>
+
+                <!-- Cromo 3 - Mbappé -->
+                <div class="cromo-card">
+                    <img src="https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=300&h=200&fit=crop" alt="Mbappé" class="cromo-img">
+                    <div class="cromo-name">Kylian Mbappé</div>
+                    <div class="cromo-team">🇫🇷 Real Madrid</div>
+                    <div class="cromo-rarity rarity-epico">💜 ÉPICO</div>
+                    <div class="cromo-price">$18.000</div>
+                    <button class="btn btn-primary" onclick="addToCart('Mbappé', 18000)">🛒 Agregar</button>
+                    <button class="btn btn-secondary" onclick="showDetails('mbappe')">👁️ Ver</button>
+                </div>
+
+                <!-- Cromo 4 - Haaland -->
+                <div class="cromo-card">
+                    <img src="https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=300&h=200&fit=crop" alt="Haaland" class="cromo-img">
+                    <div class="cromo-name">Erling Haaland</div>
+                    <div class="cromo-team">🇳🇴 Manchester City</div>
+                    <div class="cromo-rarity rarity-epico">💜 ÉPICO</div>
+                    <div class="cromo-price">$16.000</div>
+                    <button class="btn btn-primary" onclick="addToCart('Haaland', 16000)">🛒 Agregar</button>
+                    <button class="btn btn-secondary" onclick="showDetails('haaland')">👁️ Ver</button>
+                </div>
+
+                <!-- Cromo 5 - Neymar -->
+                <div class="cromo-card">
+                    <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=300&h=200&fit=crop" alt="Neymar" class="cromo-img">
+                    <div class="cromo-name">Neymar Jr</div>
+                    <div class="cromo-team">🇧🇷 Al-Hilal</div>
+                    <div class="cromo-rarity rarity-raro">💎 RARO</div>
+                    <div class="cromo-price">$12.000</div>
+                    <button class="btn btn-primary" onclick="addToCart('Neymar', 12000)">🛒 Agregar</button>
+                    <button class="btn btn-secondary" onclick="showDetails('neymar')">👁️ Ver</button>
+                </div>
+
+                <!-- Cromo 6 - Vinicius -->
+                <div class="cromo-card">
+                    <img src="https://images.unsplash.com/photo-1579952363873-27d3bfad9c0d?w=300&h=200&fit=crop" alt="Vinicius" class="cromo-img">
+                    <div class="cromo-name">Vinicius Jr</div>
+                    <div class="cromo-team">🇧🇷 Real Madrid</div>
+                    <div class="cromo-rarity rarity-raro">💎 RARO</div>
+                    <div class="cromo-price">$10.000</div>
+                    <button class="btn btn-primary" onclick="addToCart('Vinicius', 10000)">🛒 Agregar</button>
+                    <button class="btn btn-secondary" onclick="showDetails('vinicius')">👁️ Ver</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección Ofertas -->
+        <div id="ofertas" class="section">
+            <h2 style="text-align: center; margin-bottom: 2rem; color: #ff6b6b; font-size: 2rem;">
+                🔥 OFERTAS ÉPICAS 🔥
+            </h2>
+            
+            <div class="cromos-grid">
+                <div class="cromo-card" style="border-color: #ff6b6b;">
+                    <h3 style="color: #ff6b6b; margin-bottom: 1rem;">🎁 PACK LEGENDARIO</h3>
+                    <p style="margin-bottom: 1rem;">Messi + Cristiano + Mbappé</p>
+                    <div class="cromo-price" style="text-decoration: line-through; color: #666;">$66.000</div>
+                    <div class="cromo-price" style="color: #00ff88;">$55.000</div>
+                    <p style="color: #ff6b6b; font-weight: bold;">¡AHORRA $11.000!</p>
+                    <button class="btn btn-primary" onclick="addToCart('Pack Legendario', 55000)">🔥 ¡QUIERO!</button>
+                </div>
+
+                <div class="cromo-card" style="border-color: #ff6b6b;">
+                    <h3 style="color: #ff6b6b; margin-bottom: 1rem;">⚡ PACK VELOCITY</h3>
+                    <p style="margin-bottom: 1rem;">Mbappé + Haaland + Vinicius</p>
+                    <div class="cromo-price" style="text-decoration: line-through; color: #666;">$44.000</div>
+                    <div class="cromo-price" style="color: #00ff88;">$35.000</div>
+                    <p style="color: #ff6b6b; font-weight: bold;">¡AHORRA $9.000!</p>
+                    <button class="btn btn-primary" onclick="addToCart('Pack Velocity', 35000)">⚡ ¡CORRE!</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección Contacto -->
+        <div id="contacto" class="section">
+            <div class="contact-section">
+                <h2 style="color: #00ff88; margin-bottom: 2rem;">📞 CONTÁCTANOS</h2>
+                <p style="margin-bottom: 2rem; font-size: 1.2rem;">
+                    ¿Tienes preguntas? ¿Quieres hacer un pedido personalizado? 
+                    <br>¡Escríbenos y te respondemos al instante!
+                </p>
+                
+                <a href="https://wa.me/573001234567?text=¡Hola!%20Quiero%20comprar%20cromos%20épicos%20🔥" class="whatsapp-btn">
+                    📱 WhatsApp: +57 300 123 4567
+                </a>
+                
+                <div style="margin-top: 2rem;">
+                    <p>📧 Email: cromos@crafter.com</p>
+                    <p>📍 Ubicación: Bogotá, Colombia</p>
+                    <p>⏰ Horario: 24/7 Online</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Variables globales
+        let cart = [];
+        let cartTotal = 0;
+
+        // Crear partículas
+        function createParticles() {
+            const particles = document.getElementById('particles');
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 6 + 's';
+                particle.style.animationDuration = (Math.random() * 3 + 3) + 's';
+                particles.appendChild(particle);
+            }
+        }
+
+        // Navegación entre secciones
+        function showSection(sectionName) {
+            // Ocultar todas las secciones
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => section.classList.remove('active'));
+            
+            // Mostrar la sección seleccionada
+            document.getElementById(sectionName).classList.add('active');
+            
+            // Actualizar botones de navegación
+            const navBtns = document.querySelectorAll('.nav-btn');
+            navBtns.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        // Agregar al carrito
+        function addToCart(name, price) {
+            cart.push({name, price});
+            updateCartUI();
+            createExplosion(event.target);
+            
+            // Sonido de éxito (simulado con vibración en móviles)
+            if (navigator.vibrate) {
+                navigator.vibrate(200);
+            }
+        }
+
+        // Actualizar interfaz del carrito
+        function updateCartUI() {
+            const cartCount = document.getElementById('cartCount');
+            const cartItems = document.getElementById('cartItems');
+            const cartTotalElement = document.getElementById('cartTotal');
+            const whatsappBtn = document.getElementById('whatsappBtn');
+            
+            cartCount.textContent = cart.length;
+            
+            // Calcular total
+            cartTotal = cart.reduce((sum, item) => sum + item.price, 0);
+            cartTotalElement.textContent = cartTotal.toLocaleString();
+            
+            // Mostrar items del carrito
+            cartItems.innerHTML = '';
+            cart.forEach((item, index) => {
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'cart-item';
+                itemDiv.innerHTML = `
+                    <div>
+                        <div style="font-weight: bold;">${item.name}</div>
+                        <div style="color: #00ff88;">$${item.price.toLocaleString()}</div>
+                    </div>
+                    <button class="btn btn-secondary" onclick="removeFromCart(${index})" style="padding: 5px 10px;">🗑️</button>
+                `;
+                cartItems.appendChild(itemDiv);
+            });
+            
+            // Actualizar enlace de WhatsApp
+            let message = "¡Hola! Quiero comprar estos cromos épicos:\n\n";
+            cart.forEach(item => {
+                message += `• ${item.name} - $${item.price.toLocaleString()}\n`;
+            });
+            message += `\nTOTAL: $${cartTotal.toLocaleString()}\n\n🔥 ¡Están disponibles?`;
+            
+            whatsappBtn.href = `https://wa.me/573001234567?text=${encodeURIComponent(message)}`;
+        }
+
+        // Eliminar del carrito
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCartUI();
+        }
+
+        // Vaciar carrito
+        function clearCart() {
+            cart = [];
+            updateCartUI();
+        }
+
+        // Toggle carrito
+        function toggleCart() {
+            const cartPanel = document.getElementById('cartPanel');
+            cartPanel.classList.toggle('open');
+        }
+
+        // Crear efecto de explosión
+        function createExplosion(element) {
+            const rect = element.getBoundingClientRect();
+            const explosion = document.createElement('div');
+            explosion.className = 'explosion';
+            explosion.style.left = rect.left + rect.width/2 + 'px';
+            explosion.style.top = rect.top + rect.height/2 + 'px';
+            
+            for (let i = 0; i < 12; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'explosion-particle';
+                const angle = (i * 30) * Math.PI / 180;
+                const distance = 50 + Math.random() * 50;
+                particle.style.setProperty('--dx', Math.cos(angle) * distance + 'px');
+                particle.style.setProperty('--dy', Math.sin(angle) * distance + 'px');
+                explosion.appendChild(particle);
+            }
+            
+            document.body.appendChild(explosion);
+            setTimeout(() => explosion.remove(), 600);
+        }
+
+        // Mostrar detalles (placeholder)
+        function showDetails(cromo) {
+            alert(`🔥 ¡${cromo.toUpperCase()} es una carta ÉPICA! 🔥\n\n⭐ Rareza especial\n💎 Efectos únicos\n🏆 Colección limitada\n\n¡Agrégala a tu carrito antes de que se agote!`);
+        }
+
+        // Inicializar cuando carga la página
+        window.addEventListener('load', () => {
+            createParticles();
+            updateCartUI();
+        });
+
+        // Cerrar carrito al hacer clic fuera
+        document.addEventListener('click', (e) => {
+            const cartPanel = document.getElementById('cartPanel');
+            const cartInfo = document.querySelector('.cart-info');
+            
+            if (!cartPanel.contains(e.target) && !cartInfo.contains(e.target) && cartPanel.classList.contains('open')) {
+                cartPanel.classList.remove('open');
+            }
+        });
+    </script>
+</body>
+</html>
